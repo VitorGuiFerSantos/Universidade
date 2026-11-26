@@ -1,0 +1,84 @@
+#include <stdio.h>
+#include <stdlib.h>
+#define SIZE  50
+typedef struct{
+    int heap[SIZE];
+    int size;
+}MAXheap;
+int parent(int i){
+    return (i-1)/2;
+}
+int leftSon(int i){
+    return i*2+1;
+}
+int ritghSon(int i){
+    return i*2+2;
+}
+void addheap(MAXheap *h, int elmt){
+    int i = h->size;
+    h->heap[h->size++] = elmt;
+    if(h->size==1){
+        return;
+    }
+    if(h->heap[i]< h->heap[parent(i)]){
+        return;
+    }
+    do{
+        int aux = h->heap[parent(i)];
+        h->heap[parent(i)]= h->heap[i];
+        h->heap[i] = aux;
+        i = parent(i);
+    }while (h->heap[i]> h->heap[parent(i)]);
+    
+}
+void delith(MAXheap *h){
+    if(h->size==0){
+        return;
+    }
+    if(h->size==1){
+        h->size--;
+        return;
+    }
+    h->size--;
+    h->heap[0] = h->heap[h->size];
+    int i = 0;
+    do{
+        int aux = h->heap[i];
+        if(h->heap[ritghSon(i)] < h->heap[leftSon(i)]){
+            h->heap[i] = h->heap[leftSon(i)];
+            i = leftSon(i);
+            h->heap[i]= aux;
+        }else{
+            h->heap[i] = h->heap[ritghSon(i)];
+            i = ritghSon(i);
+            h->heap[i]= aux;
+        }
+    }while ( i < h->size);
+    
+}
+void printHeap(MAXheap *he){
+    int i;
+    for( i = 0; i < he->size; i++ ){
+        printf("-> |%d|\n",he->heap[i]);
+    }
+}
+int main(){
+    MAXheap  *h = malloc(sizeof(MAXheap));
+    h->size = 0;
+    addheap(h,20);
+    addheap(h,10);
+    addheap(h,5);
+    addheap(h,4);
+    addheap(h,30);
+    addheap(h,50);
+    addheap(h,100);
+    addheap(h,500);
+    addheap(h,580);
+    addheap(h,1);
+    addheap(h,8);
+    printHeap(h);
+    printf("\n\n");
+    delith(h);
+    printHeap(h);
+    return 0;
+}
